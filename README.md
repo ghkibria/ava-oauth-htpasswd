@@ -155,4 +155,28 @@ oc login -u admin -p RedHat123!  https://api.cnfdf06.ran.dfwt5g.lab:6443
 oc login -u admin -p RedHat123!  https://api.cnfdf06.ran.dfwt5g.lab:6443 --certificate-authority=./ingress-ca.crt-admin
 
 ```
-  
+## Testing the login and check new configuration changes
+- Files are created when the script executed
+```bash
+oauth-htpasswd-admin
+oauth.yaml
+ingress-ca.crt-admin
+```
+
+```diff
++ oc login -u admin -p RedHat123!  https://api.cnfdf06.ran.dfwt5g.lab:6443
+Login successful.
+
+You have access to 71 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
++ oc get user
+NAME    UID                                    FULL NAME   IDENTITIES
+admin   4dafa593-81e0-44f6-b664-74debb2e2ffb               oauth-htpasswd-admin:admin
+
++ oc get identity
+NAME                         IDP NAME               IDP USER NAME   USER NAME   USER UID
+oauth-htpasswd-admin:admin   oauth-htpasswd-admin   admin           admin       4dafa593-81e0-44f6-b664-74debb2e2ffb
+
++ oc get secret -n openshift-config|grep admin
+oauth-htpasswd-admin                      Opaque                                1      25m
+```
