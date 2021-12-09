@@ -18,7 +18,7 @@ if [[ -f "/usr/bin/htpasswd" ]]; then
 else
       username="admin"
       password="RedHat123!"
-      printf "%s\n" "INFO: htpasswd is not present so default user/password will be used: ${username}:${password}"
+      #printf "%s\n" "INFO: htpasswd is not present so default user/password will be used: ${username}:${password}"
 fi
 
 #create user file if htpasswd is not installed#
@@ -129,11 +129,11 @@ printf "%s\n" "oc login -u admin -p RedHat123!  ${ApiEndPoint}:6443 --certificat
 ```
 
 ## How to run the script
-- if htpasswd tool is not installed (dnf install httpd), then default user/pass (admin/RedHat123!) will be used automatic
-- if httpasswd is present, then the script will use it to generate and create oauth user as part of Day-1/2 operation
+- if htpasswd tool is not installed (dnf install httpd), then default user/pass (admin/RedHat123!) will be used automatic, otherwise it will use htpasswd to generate new user/pass base on the given inputs.
+
 ```diff
++ bash avaoauth_htpasswd_creation.sh avaadmin 'RedHat123!'
 + bash avaoauth_htpasswd_creation.sh admin 'RedHat123!'
-INFO: htpasswd is not present so default user/password will be used: admin:RedHat123!
 INFO: htpasswd tool is not installed on this node/vm, so admin / RedHat123! will be used
 INFO: Checking OpenShift login access to cluster e.g. oc login/whoami
 INFO: Creating secret generic oauth-htpasswd-admin
@@ -180,3 +180,6 @@ oauth-htpasswd-admin:admin   oauth-htpasswd-admin   admin           admin       
 + oc get secret -n openshift-config|grep admin
 oauth-htpasswd-admin                      Opaque                                1      25m
 ```
+
+## Note: it has been tested with SNO one-in-all(master,worker) only. But it should work with 3 masters cluster. 
+## Disclaimer, I won't resonsible for any issues to your cluster, please read and understand the script before using. 
