@@ -179,6 +179,13 @@ oauth-htpasswd-admin:admin   oauth-htpasswd-admin   admin           admin       
 
 + oc get secret -n openshift-config|grep admin
 oauth-htpasswd-admin                      Opaque                                1      25m
+
++ oc whoami
+admin
+
++ oc whoami --show-console
+https://console-openshift-console.apps.cnfdf06.ran.dfwt5g.lab
+
 ```
 
 ## Note: it has been tested with SNO one-in-all(master,worker) only. But it should work with 3 masters cluster. 
