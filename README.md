@@ -238,7 +238,7 @@ ip-10-0-181-212.ec2.internal   Ready    worker   69m   v1.22.3+934e08b   10.0.18
 ip-10-0-183-137.ec2.internal   Ready    worker   69m   v1.22.3+934e08b   10.0.183.137   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) 
 ip-10-0-232-124.ec2.internal   Ready    worker   69m   v1.22.3+934e08b   10.0.232.124   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) 
 ip-10-0-236-184.ec2.internal   Ready    master   78m   v1.22.3+934e08b   10.0.236.184   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) 
+```
 
-
-## Note: This script has been tested with SNO and 3 master nodes as well. 
+## Note: This script has been tested with SNO and 3 masters node as well. 
 ## Disclaimer, I won't resonsible for any issues to your cluster, please read and understand the script before using. 
