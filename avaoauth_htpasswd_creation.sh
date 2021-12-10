@@ -110,8 +110,8 @@ ApiEndPoint=$(oc whoami --show-console|sed 's/https:\/\/console-openshift-consol
 #if SNO something it requires ingress ca cert#
 #the script won't test automatic the new user but just print it out#
 printf "%s\n" "INFO: Testing new user name can be done two ways with ingress crt or without"
-printf "%s\n" "oc login -u admin -p RedHat123!  ${ApiEndPoint}:6443"
-printf "%s\n" "oc login -u admin -p RedHat123!  ${ApiEndPoint}:6443 --certificate-authority=./ingress-ca.crt-${username}"
+printf "%s\n" "oc login -u $[username} -p RedHat123!  ${ApiEndPoint}:6443"
+printf "%s\n" "oc login -u ${username} -p RedHat123!  ${ApiEndPoint}:6443 --certificate-authority=./ingress-ca.crt-${username}"
 
 
 #delete identify and user#
