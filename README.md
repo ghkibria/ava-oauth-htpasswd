@@ -115,8 +115,8 @@ ApiEndPoint=$(oc whoami --show-console|sed 's/https:\/\/console-openshift-consol
 #if SNO something it requires ingress ca cert#
 #the script won't test automatic the new user but just print it out#
 printf "%s\n" "INFO: Testing new user name can be done two ways with ingress crt or without"
-printf "%s\n" "oc login -u admin -p RedHat123!  ${ApiEndPoint}:6443"
-printf "%s\n" "oc login -u admin -p RedHat123!  ${ApiEndPoint}:6443 --certificate-authority=./ingress-ca.crt-${username}"
+printf "%s\n" "oc login -u ${username} -p RedHat123!  ${ApiEndPoint}:6443"
+printf "%s\n" "oc login -u ${username} -p RedHat123!  ${ApiEndPoint}:6443 --certificate-authority=./ingress-ca.crt-${username}"
 
 
 #delete identify and user#
@@ -185,8 +185,55 @@ admin
 
 + oc whoami --show-console
 https://console-openshift-console.apps.cnfdf06.ran.dfwt5g.lab
-
 ```
 
-## Note: it has been tested with SNO one-in-all(master,worker) only. But it should work with 3 masters cluster. 
+- Testing on OpenShift in AWS with 3 masters node
+```diff
++ bash avaoauth_htpasswd_creation.sh avadmin 'RedHat123!'
+Adding password for user avadmin
+INFO: Checking OpenShift login access to cluster e.g. oc login/whoami
+INFO: Creating secret generic oauth-htpasswd-avadmin
+secret/oauth-htpasswd-avadmin created
+INFO: Prepare and Create oauth.yaml
+INFO: Replace new OAUTH configuration
+oauth.config.openshift.io/cluster replaced
+oauth-openshift-6bff859c49-59rjq   1/1     Running   0          60m
+oauth-openshift-6bff859c49-7vqzd   1/1     Running   0          61m
+oauth-openshift-6bff859c49-hsghb   1/1     Running   0          61m
+INFO: Waiting for oauth POD to restart and come up...
+
+NAME                              READY   STATUS              RESTARTS   AGE
+oauth-openshift-99744bc86-ds8ms   0/1     ContainerCreating   0          27s
+oauth-openshift-99744bc86-qcj6h   1/1     Running             0          86s
+oauth-openshift-99744bc86-s4jm6   1/1     Running             0          57s
+INFO: Waiting for Oauth POD is fully UP...
+INFO: Adding cluster-role cluster-admin for avadmin
+Warning: User 'avadmin' not found
+clusterrole.rbac.authorization.k8s.io/cluster-admin added: "avadmin"
+INFO: Creating ingress crt certs and login to new user avadmin
+command terminated with exit code 1
+INFO: Testing new user name can be done two ways with ingress crt or without
+oc login -u avadmin -p RedHat123!  https://api.ci-ln-4q6vs82-76ef8.origin-ci-int-aws.dev.rhcloud.com:6443
+oc login -u avadmin -p RedHat123!  https://api.ci-ln-4q6vs82-76ef8.origin-ci-int-aws.dev.rhcloud.com:6443 --certificate-authority=./ingress-ca.crt-avadmin
+
++ oc login -u avadmin -p RedHat123!  https://api.ci-ln-4q6vs82-76ef8.origin-ci-int-aws.dev.rhcloud.com:6443
+Login successful.
+You have access to 67 projects, the list has been suppressed. You can list all projects with 'oc projects'
+Using project "default".
+
++ oc get user
+NAME      UID                                    FULL NAME   IDENTITIES
+avadmin   06eb50aa-8ff2-4a68-86b9-8eb96edcd931               oauth-htpasswd-avadmin:avadmin
++ oc get identity
+NAME                             IDP NAME                 IDP USER NAME   USER NAME   USER UID
+oauth-htpasswd-avadmin:avadmin   oauth-htpasswd-avadmin   avadmin         avadmin     06eb50aa-8ff2-4a68-86b9-8eb96edcd931
++ oc get secret -n openshift-config|grep avadmin
+oauth-htpasswd-avadmin                    Opaque                                1      4m1s
+
++ oc get no -o wide
+NAME                           STATUS   ROLES    AGE   VERSION           INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+ip-10-0-174-107.ec2.internal   Ready    master   78m   v1.22.3+934e08b   10.0.174.107   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) ip-10-0-180-244.ec2.internal   Ready    master   78m   v1.22.3+934e08b   10.0.180.244   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) ip-10-0-181-212.ec2.internal   Ready    worker   69m   v1.22.3+934e08b   10.0.181.212   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) ip-10-0-183-137.ec2.internal   Ready    worker   69m   v1.22.3+934e08b   10.0.183.137   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) ip-10-0-232-124.ec2.internal   Ready    worker   69m   v1.22.3+934e08b   10.0.232.124   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) ip-10-0-236-184.ec2.internal   Ready    master   78m   v1.22.3+934e08b   10.0.236.184   <none>        Red Hat Enterprise Linux CoreOS 49.84.202112081503-0 (Ootpa) 
+
+
+## Note: This script has been tested with SNO and 3 master nodes as well. 
 ## Disclaimer, I won't resonsible for any issues to your cluster, please read and understand the script before using. 
